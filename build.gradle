@@ -17,6 +17,12 @@ dependencies {
 
 test {
     useTestNG() {
-        suites "src/test/resources/TestNG.xml"
+        suites "src/test/resources/TestMethods.xml"
+    }
+}
+
+task testMethods(type: Test) {
+    useTestNG() {
+        suites "src/test/resources/TestMethods.xml"
     }
 }

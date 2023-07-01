@@ -7,19 +7,17 @@ import org.testng.annotations.Test;
 import java.time.Duration;
 
 public class LoginTests extends BaseTest {
-    @Test
-    public void LoginEmptyEmailPasswordTest() {
 
-//      Added ChromeOptions argument below to fix websocket error
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
+    @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
+    public void LoginEmptyEmailPasswordTest(String email, String password) throws InterruptedException{
 
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
-        String url = "https://qa.koel.app/";
-        driver.get(url);
-        Assert.assertEquals(driver.getCurrentUrl(), url);
-        driver.quit();
+        //Navigate to "https://qa.koel.app/".
+//        openLoginUrl();
+        //Log in with your credentials.
+        //enterEmail("supattra.tangsombutpaiboon@testpro.io");
+        //enterPassword("te$t$tudent1");
+        enterEmail(email);
+        enterPassword(password);
+        clickSubmit();
     }
 }
