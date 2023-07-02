@@ -88,23 +88,20 @@ public class BaseTest {
         logoutBtn.click();
     }
     //Profile Tests Helper Functions
-    protected static void clickAvatarIcon() {
-        WebElement avatarIcon = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("img.avatar")));
+    protected static void clickAvatarIcon() throws InterruptedException {
+        WebElement avatarIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".profile>a>img.avatar")));
+        Thread.sleep(200);
+        avatarIcon.isEnabled();
+        avatarIcon.isDisplayed();
         avatarIcon.click();
     }
 
     protected static String generateRandomName(){
         return UUID.randomUUID().toString().replace("-","");
     }
-//    protected static void providePassword(String password) {
-//        WebElement providePassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[name='current_password']")));
-//    }
 
-    protected static String generateRadomName(){
-        return UUID.randomUUID().toString().replace("-","");
-    }
     protected static void providePassword(String password) {
-        WebElement currentPassword = driver.findElement(By.cssSelector("[name='current_password']"));
+        WebElement currentPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[name='current_password']")));
         currentPassword.click();
         currentPassword.clear();
         currentPassword.sendKeys(password);
@@ -166,7 +163,6 @@ public class BaseTest {
 
     //help function for delete playlist
     public  void openPlayList(){
-        //WebElement playlist = driver.findElement(By.xpath(".playlist:nth-child(3)"));
         WebElement playlist = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".playlist:nth-child(3)")));
         playlist.click();
     }
@@ -175,7 +171,7 @@ public class BaseTest {
         delecteplaylistBtn.click();
         //If there are songs on the playlist
         //If yes need to click confirm
-        //If No
+        //If no song on the playlist (continue)
     }
 
     public  void ConfirmDelete() {
@@ -189,7 +185,7 @@ public class BaseTest {
     }
 
     public Boolean isSongPlaying() {
-        WebElement pauseButton = driver.findElement(By.cssSelector("span.pause"));
+        WebElement pauseButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("span.pause")));
         return pauseButton.isDisplayed();
     }
 }
