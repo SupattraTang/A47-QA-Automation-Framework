@@ -29,5 +29,4 @@ public class LoginPage extends BasePage {
         providePassword("te$t$tudent1");
         clickSubmit();
     }
-
 }
