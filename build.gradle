@@ -20,3 +20,9 @@ test {
         suites "src/test/resources/TestNG.xml"
     }
 }
+
+task testMethods(type: Test) {
+    useTestNG() {
+        suites "src/test/resources/TestMethods.xml"
+    }
+}
