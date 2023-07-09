@@ -94,9 +94,8 @@ public class BaseTest {
     }
 
     //Profile Tests Helper Functions
-    protected static void clickAvatarIcon() throws InterruptedException {
+    protected static void clickAvatarIcon() {
         WebElement avatarIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".profile>a>img.avatar")));
-        Thread.sleep(200);
         avatarIcon.isEnabled();
         avatarIcon.isDisplayed();
         avatarIcon.click();

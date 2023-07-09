@@ -7,7 +7,7 @@ import org.testng.annotations.Test;
 public class ProfileTests extends BaseTest{
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
-    public static void changeProfileNameTest (String email, String password) throws InterruptedException {
+    public static void changeProfileNameTest (String email, String password) {
         //Put the email field inside the web page
         enterEmail(email);
         //Put the password field inside the web page
@@ -21,10 +21,9 @@ public class ProfileTests extends BaseTest{
         providePassword("te$t$tudent1");
         provideProfileName(randomName);
         clickSaveButton();
-        Thread.sleep(2000);
 
         //Check if username has changed
-        WebElement actualProfileName =wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.view-profile>span.name")));
+        WebElement actualProfileName = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.view-profile>span.name")));
         Assert.assertEquals(actualProfileName.getText(), randomName);
     }
 }
