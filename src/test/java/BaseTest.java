@@ -18,7 +18,6 @@ import java.util.UUID;
 public class BaseTest {
 
     public static WebDriver driver = null;
-
     public static WebDriverWait wait = null;
     public static Actions actions = null;
     public static String url = "https://qa.koel.app/";
@@ -81,11 +80,6 @@ public class BaseTest {
         emailInput.click();
         emailInput.clear();
         emailInput.sendKeys(email);
-    }
-
-    public static void openLoginUrl() {
-        String url = "https://qa.koel.app/";
-        driver.get(url);
     }
 
     protected static void clickLogout() {

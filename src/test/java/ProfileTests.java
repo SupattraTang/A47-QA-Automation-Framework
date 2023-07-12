@@ -3,27 +3,31 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pages.HomePage;
+import pages.LoginPage;
+import pages.ProfilePage;
 
-public class ProfileTests extends BaseTest{
+public class ProfileTests extends BaseTest {
 
-    @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
-    public static void changeProfileNameTest (String email, String password) {
-        //Put the email field inside the web page
-        enterEmail(email);
-        //Put the password field inside the web page
-        enterPassword(password);
-        //Click on the submit button
-        clickSubmit();
+    @Test
+    public void changeProfileNameTest() throws InterruptedException {
+        LoginPage loginPage = new LoginPage(driver);
+        HomePage homePage = new HomePage(driver);
+        ProfilePage profilePage = new ProfilePage(driver);
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
 
-        clickAvatarIcon();
+        homePage.chooseAvatarIcon();
 
         String randomName = generateRandomName();
-        providePassword("te$t$tudent1");
+        profilePage.enterCurrentPassword("te$t$tudent1");
         provideProfileName(randomName);
-        clickSaveButton();
+        profilePage.clickSaveBtn();
 
+        Thread.sleep(5000);
         //Check if username has changed
-        WebElement actualProfileName = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("a.view-profile>span.name")));
+        WebElement actualProfileName = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.view-profile>span.name")));
         Assert.assertEquals(actualProfileName.getText(), randomName);
+
     }
+
 }

@@ -1,8 +1,27 @@
 import org.testng.Assert;
 import org.testng.annotations.Test;
+import pages.AllSongsPage;
+import pages.HomePage;
+import pages.LoginPage;
 
 
 public class SongTests extends BaseTest {
+
+    @Test
+    public void playSong(){
+        LoginPage loginPage = new LoginPage(driver);
+        HomePage homePage = new HomePage(driver);
+        AllSongsPage allSongs = new AllSongsPage(driver);
+
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
+
+        homePage.chooseAllSongsList();
+        allSongs.contextClickFirstSong();
+        allSongs.choosePlayOption();
+
+        Assert.assertTrue(allSongs.isSongPlaying());
+    }
+
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void deletePlaylist(String email, String password) {
@@ -21,33 +40,16 @@ public class SongTests extends BaseTest {
         Assert.assertTrue(getDeletedPlayListMsg().contains(deletedPlayListMsg));
     }
 
-    @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
-    public void playSong(String email, String password) throws InterruptedException {
-        String deletedPlayListMsg = "Deleted playlist";
-        //provide email
-        enterEmail(email);
-        //provide password
-        enterPassword(password);
-        //click submit
-        clickSubmit();
+    @Test
+    public void hoverOverPlayButton(){
+        LoginPage loginPage = new LoginPage(driver);
+        HomePage homePage = new HomePage(driver);
+        AllSongsPage allSongs = new AllSongsPage(driver);
 
-        chooseAllSongList();
-        contextClickFirstSong();
-        choosePlayOption();
-        Assert.assertTrue(isSongPlaying());
-    }
+        loginPage.login();
+        homePage.chooseAllSongsList();
 
-    @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
-    public void hoverOverPlayButton(String email, String password){
-        //provide email
-        enterEmail(email);
-        //provide password
-        enterPassword(password);
-        //click submit
-        clickSubmit();
-
-        chooseAllSongList();
-        hoverPlay();
+        homePage.hoverPlay();
         Assert.assertTrue(hoverPlay().isDisplayed());
     }
 
