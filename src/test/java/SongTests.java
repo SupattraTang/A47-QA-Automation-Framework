@@ -25,13 +25,10 @@ public class SongTests extends BaseTest {
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void deletePlaylist(String email, String password) {
+
         String deletedPlayListMsg = "Deleted playlist";
-        //provide email
-        enterEmail(email);
-        //provide password
-        enterPassword(password);
-        //click submit
-        clickSubmit();
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
 
         //Start play song by click play
         openPlayList();
@@ -55,12 +52,8 @@ public class SongTests extends BaseTest {
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void countSongInPlayList(String email, String password){
-        //provide email
-        enterEmail(email);
-        //provide password
-        enterPassword(password);
-        //click submit
-        clickSubmit();
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
 
         choosePlayListByName("Test05");
         displayAllSong();
@@ -69,12 +62,8 @@ public class SongTests extends BaseTest {
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void renamePlaylist(String email, String password){
-        //provide email
-        enterEmail(email);
-        //provide password
-        enterPassword(password);
-        //click submit
-        clickSubmit();
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
 
         doubleClickPlaylist();
         enterNewPlaylistName();

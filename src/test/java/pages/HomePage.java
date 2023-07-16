@@ -3,16 +3,13 @@ package pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
-import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public class HomePage extends BasePage {
     public HomePage(WebDriver givenDriver) { super(givenDriver); }
 
-
-    By allSongs = By.cssSelector("i a.songs");
+    private By allSongs = By.cssSelector("i a.songs");
 
     @FindBy(css = "img.avatar")
     WebElement userAvatarIcon;
@@ -28,8 +25,6 @@ public class HomePage extends BasePage {
         return this;
     }
 
-
-    //Play Song methods
     // Play Song methods
     public void chooseAllSongsList() {
         waitForOverlayToGoAway();

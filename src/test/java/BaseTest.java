@@ -6,10 +6,19 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
+
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.time.Duration;
 import java.util.List;
 import java.util.UUID;
@@ -24,28 +33,72 @@ public class BaseTest {
 
     @BeforeSuite
     static void setupClass() {
-        WebDriverManager.chromedriver().setup();
+        //WebDriverManager.chromedriver().setup();
+//        WebDriverManager.firefoxdriver().setup();
+    }
+
+    public static WebDriver pickBrowser(String browserName) throws MalformedURLException {
+        DesiredCapabilities caps = new DesiredCapabilities();
+        String gridURL = "http://192.168.1.28:4444"; //repleace with your grid url
+
+        switch(browserName){
+            //gradle clean testSmoke -Dbrowser=firefox
+            case "firefox":
+                WebDriverManager.firefoxdriver().setup();
+                return driver = new FirefoxDriver();
+            //gradle clean testSmoke -Dbrowser=MSEdge
+            case "MSEdge":
+                WebDriverManager.edgedriver().setup();
+                EdgeOptions edgeOptions = new EdgeOptions();
+                edgeOptions.addArguments("--remote-allow-origins=*");
+                return driver = new EdgeDriver(edgeOptions);
+            //gradle clean testSmoke -Dbrowser=grid-edge
+            case "grid-edge":
+                caps.setCapability("browserName", "MSEdge");
+                return driver = new RemoteWebDriver(URI.create(gridURL).toURL(), caps);
+            //gradle clean testSmoke -Dbrowser=grid-firefox
+            case "grid-firefox":
+                caps.setCapability("browserName", "firefox");
+                return driver = new RemoteWebDriver(URI.create(gridURL).toURL(), caps);
+            //gradle clean testSmoke -Dbrowser=grid-chrome
+            case "grid-chrome":
+                caps.setCapability("browserName", "chrome");
+                return driver = new RemoteWebDriver(URI.create(gridURL).toURL(), caps);
+            //gradle clean testSmoke -Dbrowser=chrome (or whatever)
+            default:
+                WebDriverManager.chromedriver().setup();
+                ChromeOptions options = new ChromeOptions();
+                options.addArguments("--remote-allow-origins=*");
+                return driver = new ChromeDriver(options);
+        }
     }
 
     @BeforeMethod
     @Parameters({"BaseURL"})
-    public void launchBrowser(String BaseURL) {
+    public void launchBrowser(String BaseURL) throws MalformedURLException {
         // Added ChromeOptions argument below to fix websocket error
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--remote-allow-origins=*");
-        driver = new ChromeDriver(options);
+        //ChromeOptions options = new ChromeOptions();
+        //options.addArguments("--remote-allow-origins=*");
+        //driver = new ChromeDriver(options);
+        driver = pickBrowser(System.getProperty("browser"));
+
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().window().maximize();
         url = BaseURL;
         driver.get(url);
+        navigateToPage();
 
         wait = new WebDriverWait(driver, Duration.ofSeconds(4));
         actions = new Actions(driver);
+
     }
 
     @AfterMethod
     public void closeBrowser() {
         driver.quit();
     }
+
+    public void navigateToPage() { driver.get(url); }
 
     @DataProvider(name = "IncorrectLoginProviders")
     public static Object[][] getDataFromDataProviders() {
@@ -63,37 +116,8 @@ public class BaseTest {
         };
     }
 
-    protected static void clickSubmit() {
-        WebElement submitLogin = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[Type='submit']")));
-        submitLogin.click();
-    }
-
-    protected static void enterPassword(String password) {
-        WebElement passwordInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[type='password']")));
-        passwordInput.click();
-        passwordInput.clear();
-        passwordInput.sendKeys(password);
-    }
-
-    protected static void enterEmail(String email) {
-        WebElement emailInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[type='email']")));
-        emailInput.click();
-        emailInput.clear();
-        emailInput.sendKeys(email);
-    }
-
-    protected static void clickLogout() {
-        WebElement logoutBtn = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".logout.control")));
-        logoutBtn.click();
-    }
 
     //Profile Tests Helper Functions
-    protected static void clickAvatarIcon() {
-        WebElement avatarIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".profile>a>img.avatar")));
-        avatarIcon.isEnabled();
-        avatarIcon.isDisplayed();
-        avatarIcon.click();
-    }
 
     protected static String generateRandomName() {
         return UUID.randomUUID().toString().replace("-", "");
