@@ -9,6 +9,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -19,7 +20,9 @@ import org.testng.annotations.*;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.time.Duration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,10 +34,26 @@ public class BaseTest {
     public static Actions actions = null;
     public static String url = "https://qa.koel.app/";
 
+    public static final  ThreadLocal<WebDriver> threadDriver = new ThreadLocal<WebDriver>();
+
     @BeforeSuite
     static void setupClass() {
         //WebDriverManager.chromedriver().setup();
-//        WebDriverManager.firefoxdriver().setup();
+    }
+
+    public static WebDriver lambdaTest() throws MalformedURLException {
+        String hubURL = "https://hub.lambdatest.com/wd/hub";
+        FirefoxOptions browserOptions = new FirefoxOptions();
+        browserOptions.setPlatformName("Windows 10");
+        browserOptions.setBrowserVersion("114.0");
+        HashMap<String, Object> ltOptions = new HashMap<String, Object>();
+        ltOptions.put("username", "supattra.tangsombutpaiboon");
+        ltOptions.put("accessKey", "3ghIN1WhfomOeZJu3slfSVnpPJfv0Iu8EIPQsPpArTVZtEcK5H");
+        ltOptions.put("project", "Untitled");
+        ltOptions.put("w3c", true);
+        browserOptions.setCapability("LT:Options", ltOptions);
+
+        return new RemoteWebDriver(new URL(hubURL), browserOptions);
     }
 
     public static WebDriver pickBrowser(String browserName) throws MalformedURLException {
@@ -42,34 +61,36 @@ public class BaseTest {
         String gridURL = "http://192.168.1.28:4444"; //repleace with your grid url
 
         switch(browserName){
-            //gradle clean testSmoke -Dbrowser=firefox
+            //gradle clean testSmoke -DbrowserName==firefox
             case "firefox":
                 WebDriverManager.firefoxdriver().setup();
                 return driver = new FirefoxDriver();
-            //gradle clean testSmoke -Dbrowser=MSEdge
-            case "MSEdge":
+            //gradle clean testSmoke -DbrowserName==MSEdge
+            case "MicrosoftEdge":
                 WebDriverManager.edgedriver().setup();
                 EdgeOptions edgeOptions = new EdgeOptions();
                 edgeOptions.addArguments("--remote-allow-origins=*");
                 return driver = new EdgeDriver(edgeOptions);
-            //gradle clean testSmoke -Dbrowser=grid-edge
+            //gradle clean testSmoke -DbrowserName==grid-edge
             case "grid-edge":
-                caps.setCapability("browserName", "MSEdge");
+                caps.setCapability("browserName", "MicrosoftEdge");
                 return driver = new RemoteWebDriver(URI.create(gridURL).toURL(), caps);
-            //gradle clean testSmoke -Dbrowser=grid-firefox
+            //gradle clean testSmoke -DbrowserName==grid-firefox
             case "grid-firefox":
                 caps.setCapability("browserName", "firefox");
                 return driver = new RemoteWebDriver(URI.create(gridURL).toURL(), caps);
-            //gradle clean testSmoke -Dbrowser=grid-chrome
+            //gradle clean testSmoke -DbrowserName==grid-chrome
             case "grid-chrome":
                 caps.setCapability("browserName", "chrome");
                 return driver = new RemoteWebDriver(URI.create(gridURL).toURL(), caps);
-            //gradle clean testSmoke -Dbrowser=chrome (or whatever)
+            //gradle clean testSmoke -DbrowserName==chrome (or whatever)
+            case "cloud":
+                return  lambdaTest();
             default:
                 WebDriverManager.chromedriver().setup();
-                ChromeOptions options = new ChromeOptions();
-                options.addArguments("--remote-allow-origins=*");
-                return driver = new ChromeDriver(options);
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.addArguments("--remote-allow-origins=*");
+                return driver = new ChromeDriver(chromeOptions);
         }
     }
 
@@ -80,25 +101,35 @@ public class BaseTest {
         //ChromeOptions options = new ChromeOptions();
         //options.addArguments("--remote-allow-origins=*");
         //driver = new ChromeDriver(options);
-        driver = pickBrowser(System.getProperty("browser"));
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-        driver.manage().window().maximize();
+//        driver = pickBrowser(System.getProperty("browser"));
+
+        threadDriver.set(pickBrowser(System.getProperty("browser")));
+        getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        getDriver().manage().window().maximize();
+
         url = BaseURL;
-        driver.get(url);
+//        driver.get(url);
         navigateToPage();
 
-        wait = new WebDriverWait(driver, Duration.ofSeconds(4));
-        actions = new Actions(driver);
+        wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+        actions = new Actions(getDriver());
 
     }
 
     @AfterMethod
     public void closeBrowser() {
-        driver.quit();
+        getDriver().quit();
+        threadDriver.remove();
     }
 
-    public void navigateToPage() { driver.get(url); }
+    public WebDriver getDriver(){
+        System.out.println("Driver is accessed");
+        return threadDriver.get();
+    }
+
+
+    public void navigateToPage() { getDriver().get(url); }
 
     @DataProvider(name = "IncorrectLoginProviders")
     public static Object[][] getDataFromDataProviders() {
@@ -123,12 +154,12 @@ public class BaseTest {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
-    protected static void providePassword(String password) {
-        WebElement currentPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[name='current_password']")));
-        currentPassword.click();
-        currentPassword.clear();
-        currentPassword.sendKeys(password);
-    }
+//    protected static void providePassword(String password) {
+//        WebElement currentPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("[name='current_password']")));
+//        currentPassword.click();
+//        currentPassword.clear();
+//        currentPassword.sendKeys(password);
+//    }
 
     protected static void provideProfileName(String name) {
         WebElement currentName = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[name='name']")));
@@ -136,16 +167,16 @@ public class BaseTest {
         currentName.sendKeys(name);
     }
 
-    protected static void clickSaveButton() {
-        WebElement saveButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(("button.btn-submit"))));
-        saveButton.click();
-    }
+//    protected static void clickSaveButton() {
+//        WebElement saveButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(("button.btn-submit"))));
+//        saveButton.click();
+//    }
 
-    protected static void searchSong(String songName) {
-        WebElement searchField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[type='search']")));
-        searchField.clear();
-        searchField.sendKeys(songName);
-    }
+//    protected static void searchSong(String songName) {
+//        WebElement searchField = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("input[type='search']")));
+//        searchField.clear();
+//        searchField.sendKeys(songName);
+//    }
 
     protected static void clickViewAll() {
         WebElement viewAllButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("button[data-test='view-all-songs-btn']")));

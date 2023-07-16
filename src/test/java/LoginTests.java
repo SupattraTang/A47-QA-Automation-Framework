@@ -5,11 +5,22 @@ import pages.LoginPage;
 
 public class LoginTests extends BaseTest {
     @Test
+    public void LoginInvalidEmailPasswordTest() {
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.provideEmail("test.test@test.test")
+                 .providePassword("te$t$tudent")
+                 .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
+    }
+
+    @Test
     public void LoginValidEmailPasswordTest() {
-        LoginPage loginPage = new LoginPage(driver);
+        LoginPage loginPage = new LoginPage(getDriver());
         HomePage homePage = new HomePage(driver);
-        //loginPage.login();
-        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
-        Assert.assertTrue(homePage.getUserAvatar().isDisplayed());
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io")
+                 .providePassword("te$t$tudent1")
+                 .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
+        Assert.assertTrue(homePage.isAvatarDisplay());
     }
 }

@@ -11,7 +11,7 @@ public class ProfileTests extends BaseTest {
 
     @Test
     public void changeProfileNameTest() throws InterruptedException {
-        LoginPage loginPage = new LoginPage(driver);
+        LoginPage loginPage = new LoginPage(getDriver());
         HomePage homePage = new HomePage(driver);
         ProfilePage profilePage = new ProfilePage(driver);
         loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();

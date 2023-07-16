@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 
 public class HomePage extends BasePage {
@@ -17,6 +18,12 @@ public class HomePage extends BasePage {
         return userAvatarIcon;
     }
 
+
+//    public WebElement getUserAvatar() {
+//        findElement(userAvatarIcon) ;
+//    }
+//    private By userAvatarIcon = By.cssSelector("img.avatar");
+//
     public HomePage chooseAvatarIcon () {
         waitForOverlayToGoAway();
         userAvatarIcon.isEnabled();
@@ -39,5 +46,9 @@ public class HomePage extends BasePage {
     public WebElement hoverPlay(){
         hoverAction(playBtn);
         return findElement(playBtn);
+    }
+
+    public boolean isAvatarDisplay(){
+        return userAvatarIcon.isDisplayed();
     }
 }

@@ -9,11 +9,14 @@ public class SongTests extends BaseTest {
 
     @Test
     public void playSong(){
-        LoginPage loginPage = new LoginPage(driver);
+        LoginPage loginPage = new LoginPage(getDriver());
         HomePage homePage = new HomePage(driver);
         AllSongsPage allSongs = new AllSongsPage(driver);
 
-        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io")
+                 .providePassword("te$t$tudent1")
+                 .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
 
         homePage.chooseAllSongsList();
         allSongs.contextClickFirstSong();
@@ -25,10 +28,13 @@ public class SongTests extends BaseTest {
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void deletePlaylist(String email, String password) {
-
         String deletedPlayListMsg = "Deleted playlist";
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
+        LoginPage loginPage = new LoginPage(getDriver());
+
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io")
+                .providePassword("te$t$tudent1")
+                .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
 
         //Start play song by click play
         openPlayList();
@@ -39,11 +45,15 @@ public class SongTests extends BaseTest {
 
     @Test
     public void hoverOverPlayButton(){
-        LoginPage loginPage = new LoginPage(driver);
+        LoginPage loginPage = new LoginPage(getDriver());
         HomePage homePage = new HomePage(driver);
         AllSongsPage allSongs = new AllSongsPage(driver);
 
-        loginPage.login();
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io")
+                .providePassword("te$t$tudent1")
+                .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
+
         homePage.chooseAllSongsList();
 
         homePage.hoverPlay();
@@ -52,8 +62,11 @@ public class SongTests extends BaseTest {
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void countSongInPlayList(String email, String password){
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io")
+                .providePassword("te$t$tudent1")
+                .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
 
         choosePlayListByName("Test05");
         displayAllSong();
@@ -62,8 +75,11 @@ public class SongTests extends BaseTest {
 
     @Test (dataProvider = "CorrectLoginProviders", dataProviderClass = BaseTest.class)
     public void renamePlaylist(String email, String password){
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io").providePassword("te$t$tudent1").clickSubmit();
+        LoginPage loginPage = new LoginPage(getDriver());
+        loginPage.provideEmail("supattra.tangsombutpaiboon@testpro.io")
+                .providePassword("te$t$tudent1")
+                .clickSubmit();
+        Assert.assertEquals(getDriver().getCurrentUrl(), url);
 
         doubleClickPlaylist();
         enterNewPlaylistName();
