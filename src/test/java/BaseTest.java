@@ -103,7 +103,9 @@ public class BaseTest {
         //driver = new ChromeDriver(options);
 
 //        driver = pickBrowser(System.getProperty("browser"));
-
+        ThreadLocal<Object> threadLocal = new ThreadLocal<>();
+        driver = pickBrowser(System.getProperty("browser"));
+        threadLocal.set(driver);
         threadDriver.set(pickBrowser(System.getProperty("browser")));
         getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         getDriver().manage().window().maximize();
@@ -112,8 +114,8 @@ public class BaseTest {
 //        driver.get(url);
         navigateToPage();
 
-        wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
-        actions = new Actions(getDriver());
+//        wait = new WebDriverWait(getDriver(), Duration.ofSeconds(10));
+//        actions = new Actions(getDriver());
 
     }
 

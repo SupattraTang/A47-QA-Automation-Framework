@@ -30,7 +30,7 @@ task testSmoke(type: Test) {
 
 task testRegression(type: Test) {
     useTestNG() {
-        suites "src/test/resources/Regression.xml"
+        suites "src/test/resources/${suite}.xml"
         systemProperty "browser", System.getProperty("browserName")
     }
 }
