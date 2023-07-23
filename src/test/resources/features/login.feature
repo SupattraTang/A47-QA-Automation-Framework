@@ -1,4 +1,4 @@
-Feature: Login feature
+Feature: Login Features
 
   Scenario: Login Success
     Given I open browser
@@ -16,7 +16,7 @@ Feature: Login feature
     And I submit
     Then I am not logged in
 
-  Scenario: Empty Login and Password
+  Scenario: Empty Email and Password
     Given I open browser
     And I open Login page
     When I enter email ""

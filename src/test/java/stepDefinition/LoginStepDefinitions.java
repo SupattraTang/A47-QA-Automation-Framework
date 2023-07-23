@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import pages.LoginPage;
 
 import java.sql.Driver;
 import java.time.Duration;
@@ -61,7 +62,7 @@ public class LoginStepDefinitions {
     }
 
     @Then("I am not logged in")
-    public void stillLoginfPage(){
+    public void stillLoginPage(){
         Assert.assertEquals(driver.getCurrentUrl(), url);
     }
 
