@@ -10,7 +10,7 @@ import pages.ProfilePage;
 public class ProfileTests extends BaseTest {
 
     @Test
-    public void changeProfileNameTest() throws InterruptedException {
+    public void changeProfileNameTest() {
         LoginPage loginPage = new LoginPage(getDriver());
         HomePage homePage = new HomePage(driver);
         ProfilePage profilePage = new ProfilePage(driver);
@@ -23,7 +23,7 @@ public class ProfileTests extends BaseTest {
         provideProfileName(randomName);
         profilePage.clickSaveBtn();
 
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         //Check if username has changed
         WebElement actualProfileName = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("a.view-profile>span.name")));
         Assert.assertEquals(actualProfileName.getText(), randomName);
