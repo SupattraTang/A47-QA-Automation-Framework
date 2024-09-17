@@ -3,9 +3,11 @@ import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
-public class LoginTests extends BaseTest {
-//    @Test
-    public static void LoginValidEmailPasswordTest() {
+public class Homework17 extends BaseTest {
+
+    @Test
+    public void addSongToPlaylist() throws InterruptedException {
+
         //Open the URL for the web page on the chrome browser
         openLoginUrl();
 
@@ -22,18 +24,21 @@ public class LoginTests extends BaseTest {
         WebElement avatar = driver.findElement(By.cssSelector(".avatar"));
         Assert.assertTrue(avatar.isDisplayed());
 
-    }
+        //Search song "Dark Day Grav"
+        searchSong("Dark Day Grav");
+        Thread.sleep(2000);
+        //Click View All
+        clickViewAll();
+        Thread.sleep(2000);
+        clickFirstSong();
+        clickAddButton();
+        selecteFirstplaylist();
 
 
-//    @Test
-    public static void LoginEmptyEmailPasswordTest() {
-        openLoginUrl();
-        //Put the email field inside the web page
-        enterEmail("");
-        //Put the password field inside the web page
-        enterPassword("");
-        clickSubmit();
-        Assert.assertEquals(driver.getCurrentUrl(), url);
+
+
+
+
     }
 
 }
